@@ -14,9 +14,13 @@ export default class CryptoCompareConnector {
         let cs = coins.reduce((acc, c) => acc + c + ',', '').toUpperCase()
         const res = await this.client(`/pricemulti?fsyms=${cs}&tsyms=${this.fiat}`)
         const data = await res.data
-        return data
+        let prices = Object.entries(data)
+        return prices
     }
     async setFiat(newFiat) {
         this.fiat = newFiat
+    }
+    async getFiat() {
+        return this.fiat
     }
 }

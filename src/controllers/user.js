@@ -61,19 +61,14 @@ export async function getPortfolio(req, res) {
         amount.push(e[1])
     })
     let prices = await CCC.getPrices(coins)
-    amount.map()
-    res.send(portfolio)
-}
-
-async function getPrices() {
-
-} 
-
-async function getCoins(user) {
-    console.log(portfolio)
-    let coins = []
-    for(let [c, amnt] in Object.entries(portfolio)) {
-        if (amnt > 0) coins[c] = amnt
+    let wallet = []
+    let fiat = await CCC.getFiat()
+    for (let i = 0; i < coins.length; i++) {
+        let cv = {}
+        let c = prices[i][0], p = prices[i][1][fiat]
+        let a = amount[i]
+        cv[c] = p*a
+        wallet.push(cv)
     }
-    return coins
+    res.send(wallet)
 }
