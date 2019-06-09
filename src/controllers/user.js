@@ -18,15 +18,9 @@ export async function createUser(req, res) {
         email: email,
         password: password,
         portfolio: {
-            "BTC": 0, 
-            "ETH": 0, 
-            "XRP": 0, 
-            "LTC": 0, 
-            "BCH": 0, 
-            "EOS": 0, 
-            "TRX": 0, 
-            "XMR": 0, 
-            "XLM": 0, 
+            "BTC": 0, "ETH": 0, "XRP": 0,
+            "LTC": 0, "BCH": 0, "EOS": 0,
+            "TRX": 0, "XMR": 0, "XLM": 0,
             "DASH": 0
         }
     })
@@ -49,26 +43,21 @@ export async function updatePortfolio (req, res) {
     })
 }
 
-export async function getPortfolio(req, res) {
+export async function getWallet(req, res) {
     const { username } = req.body
     let { portfolio } = await User.findOne({username: username})
     portfolio = Object.entries(portfolio)
     portfolio = portfolio.filter(e => e[0] != "$init" && e[1]  > 0)
     let coins = []
-    let amount = []
-    portfolio.forEach(e => {
-        coins.push(e[0])
-        amount.push(e[1])
-    })
+    portfolio.forEach(e => coins.push(e[0]))
     let prices = await CCC.getPrices(coins)
     let wallet = []
-    let fiat = await CCC.getFiat()
-    for (let i = 0; i < coins.length; i++) {
+    portfolio.forEach(e => {
         let cv = {}
-        let c = prices[i][0], p = prices[i][1][fiat]
-        let a = amount[i]
-        cv[c] = p*a
+        let c = e[0], a = e[1]
+        let p = prices[c]
+        cv[c] = (p*a).toFixed(2)
         wallet.push(cv)
-    }
+    })
     res.send(wallet)
 }

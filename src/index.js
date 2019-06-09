@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 require('dotenv').config()
 
-import { getUsers, createUser, updatePortfolio, getPortfolio } from './controllers/user'
+import { getUsers, createUser, updatePortfolio, getWallet } from './controllers/user'
 import CryptoCompareConnector from './CryptoCompareConnect'
 const db = require('./db')
 const app = express()
@@ -17,7 +17,7 @@ app.use(
 )
 
 app.get('/users', getUsers)
-app.get('/user', getPortfolio)
+app.get('/user', getWallet)
 app.put('/user', updatePortfolio)
 app.post('/user', createUser)
 
